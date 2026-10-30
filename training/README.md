@@ -9,5 +9,5 @@ Prototype for the 2nd OneEarth International Hackathon 2026.
 - `pdd-core.js` – the same network running in JavaScript, so the app works offline on a phone or laptop; also the AI heatmap (class activation map), leaf and blur checks.
 - `check_equiv.py` – proves the JavaScript model gives the same answers as the Python one.
 
-Results on 937 test photos never used in training: 91.0% accuracy. Answers above the 80% confidence threshold were right 98.2% of the time (82% of photos).
+Current model in the app (Person 1's training run): 88.1% accuracy on 520 separate PlantVillage photos (not in the original training set). Answers above the 80% confidence threshold were right 96.2% of the time (77% of photos).
 Data: PlantVillage (Hughes & Salathé 2015), https://github.com/spMohanty/PlantVillage-Dataset
