@@ -1,0 +1,409 @@
+:root {
+  --green: #245b3a;
+  --green2: #34794b;
+  --ink: #1d2a21;
+  --muted: #68776c;
+  --line: #e1e9e2;
+  --paper: #f4f7f2;
+  --white: #fff;
+  font-family: Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.topbar {
+  min-height: 70px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+  background: var(--green);
+}
+
+.brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: #ffffff20;
+  font-size: 25px;
+}
+
+.topbar strong,
+.topbar span {
+  display: block;
+}
+
+.topbar div:nth-child(2) span {
+  color: #d9e8dc;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.offline-pill {
+  margin-left: auto;
+  border: 1px solid #ffffff55;
+  border-radius: 30px;
+  padding: 6px 10px;
+  font-size: 11px;
+}
+
+.container {
+  width: min(100% - 32px, 680px);
+  margin: 34px auto 60px;
+}
+
+.intro {
+  margin-bottom: 22px;
+}
+
+.eyebrow {
+  color: var(--green2);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 36px;
+}
+
+.intro > p:last-child {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.panel {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 8px 28px #173b1c0a;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.step-number {
+  padding: 10px;
+  border-radius: 50%;
+  background: #edf4ed;
+  color: var(--green);
+}
+
+.preview-wrap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  min-height: 240px;
+  border: 1px dashed #bdcdbf;
+  border-radius: 15px;
+  background: #f3f7f1;
+}
+
+.preview-placeholder {
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--muted);
+  text-align: center;
+  padding: 20px;
+}
+
+.preview-placeholder strong {
+  color: #35483a;
+}
+
+.camera-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  background: #e4eee4;
+  color: var(--green);
+  font-size: 32px;
+}
+
+#photoPreview {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+}
+
+#heatmapCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.primary-button,
+.secondary-button {
+  display: flex;
+  width: 100%;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.primary-button {
+  margin-top: 15px;
+  border: 0;
+  background: var(--green);
+  color: white;
+}
+
+.primary-button:hover {
+  background: #19482c;
+}
+
+.secondary-button {
+  margin-top: 10px;
+  border: 1px solid #d7e2d8;
+  background: white;
+  color: var(--green);
+}
+
+.primary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.privacy-note,
+.status {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.status.error {
+  color: #a52e2e;
+}
+
+.status.success {
+  color: #247344;
+}
+
+.result-panel {
+  margin-top: 18px;
+}
+
+.confidence-pill {
+  padding: 7px 10px;
+  border-radius: 30px;
+  background: #edf5ee;
+  color: var(--green);
+  font-size: 11px;
+}
+
+.confidence-row {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.confidence-row strong {
+  font-size: 32px;
+}
+
+.confidence-row span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.meter {
+  height: 8px;
+  margin: 8px 0 12px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #edf1ed;
+}
+
+.meter span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: #399052;
+}
+
+.disclaimer {
+  color: #8a5a20;
+  font-size: 12px;
+}
+
+.top-guesses {
+  padding: 14px;
+  border-radius: 13px;
+  background: #fff8e9;
+}
+
+.top-guesses li {
+  padding: 4px 0;
+  font-size: 13px;
+}
+
+.expert-message {
+  margin-top: 12px;
+  color: #76501f;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.treatment-box {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #f8faf7;
+}
+
+.treatment-box p {
+  color: #425247;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.treatment-box small {
+  color: var(--muted);
+}
+
+.fine-print {
+  margin-top: 18px;
+  padding: 14px;
+  border-left: 3px solid #c28a35;
+  background: #fffaf0;
+  color: #765b32;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  .container {
+    width: calc(100% - 22px);
+    margin-top: 24px;
+  }
+
+  .panel {
+    padding: 17px;
+  }
+}
+/* ===================== [merge] Field map tab + bottom tab bar (Person 3) ===================== */
+:root {
+  /* names map.js uses for its treatment-plan styles, matched to this palette */
+  --surface: #ffffff;
+  --surface-2: #f5f8f3;
+  --leaf: var(--green);
+  --leaf-ink: #ffffff;
+  --ok: #2f7d47;
+  --treat: #b23a2e;
+}
+
+body {
+  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+}
+
+.topbar {
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+}
+
+.map-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.map-box {
+  width: 100%;
+  height: 58vh;
+  min-height: 320px;
+}
+
+#map-summary {
+  margin-top: 18px;
+}
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000; /* above Leaflet's controls */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 240px));
+  justify-content: center;
+  background: white;
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.tab {
+  height: 64px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: bold;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.tab span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.tab[aria-current="page"] {
+  color: var(--green);
+}
+
+.tab:focus-visible,
+.primary-button:focus-visible,
+.secondary-button:focus-visible {
+  outline: 3px solid var(--green2);
+  outline-offset: 2px;
+}
