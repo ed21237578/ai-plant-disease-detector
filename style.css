@@ -329,3 +329,81 @@ input[type="file"] {
     padding: 17px;
   }
 }
+/* ===================== [merge] Field map tab + bottom tab bar (Person 3) ===================== */
+:root {
+  /* names map.js uses for its treatment-plan styles, matched to this palette */
+  --surface: #ffffff;
+  --surface-2: #f5f8f3;
+  --leaf: var(--green);
+  --leaf-ink: #ffffff;
+  --ok: #2f7d47;
+  --treat: #b23a2e;
+}
+
+body {
+  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+}
+
+.topbar {
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+}
+
+.map-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.map-box {
+  width: 100%;
+  height: 58vh;
+  min-height: 320px;
+}
+
+#map-summary {
+  margin-top: 18px;
+}
+
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000; /* above Leaflet's controls */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 240px));
+  justify-content: center;
+  background: white;
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.tab {
+  height: 64px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: bold;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.tab span {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.tab[aria-current="page"] {
+  color: var(--green);
+}
+
+.tab:focus-visible,
+.primary-button:focus-visible,
+.secondary-button:focus-visible {
+  outline: 3px solid var(--green2);
+  outline-offset: 2px;
+}
