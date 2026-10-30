@@ -19,6 +19,17 @@
   let model = null;
   let treatments = {};
   let currentScan = null;
+  let lastSquareCanvas = null; // [merge] the exact 256x256 square the AI analysed
+
+  // [merge] "Tomato___Early_blight" -> "Tomato · Early blight" (uses treatments.json names when present)
+  function niceName(label) {
+    const t = treatments[label];
+    if (t && t.name) return t.name;
+    const [crop, cond] = String(label).split("___");
+    const c = (crop || "").replace(/,_bell/i, " (bell)").replace(/_/g, " ");
+    const d = (cond || "").replace(/_/g, " ").replace(/\s+/g, " ").trim();
+    return d ? `${c} · ${d.charAt(0).toUpperCase()}${d.slice(1)}` : c;
+  }
 
   function setStatus(message, type = "") {
     statusEl.textContent = message;
@@ -44,8 +55,8 @@
     try {
       const [modelJson, treatmentJson] =
         await Promise.all([
-          loadJson("model.json"),
-          loadJson("treatments.json")
+          window.PDD_MODEL_DATA || loadJson("model.json"),
+          window.PDD_TREATMENTS_DATA || loadJson("treatments.json")
         ]);
 
       model = PDD.loadModel(modelJson);
@@ -99,6 +110,10 @@
     const ctx = canvas.getContext("2d", {
       willReadFrequently: true
     });
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high"; // [merge] same resize quality the model was tested with
+    lastSquareCanvas = canvas;
 
     ctx.drawImage(
       image,
@@ -186,7 +201,7 @@
     const confidencePct = best.confidence * 100;
 
     $("resultTitle").textContent =
-      best.label.replaceAll("_", " ");
+      niceName(best.label);
 
     $("confidenceValue").textContent =
       confidencePct.toFixed(1) + "%";
@@ -205,17 +220,19 @@
         : "Model output only. Confirm the diagnosis before treatment.";
 
     const treatment = treatments[best.label] || {};
-
-    $("treatmentTitle").textContent =
-      treatment.name || best.label;
-
-    $("treatmentText").textContent =
-      treatment.treatment || "Ask a qualified agronomist.";
-
-    $("treatmentNote").textContent =
-      treatment.note || "";
-
     const lowConfidence = confidencePct < 80;
+
+    $("treatmentTitle").textContent = lowConfidence
+      ? "Don't treat yet"
+      : (treatment.name || niceName(best.label));
+
+    $("treatmentText").textContent = lowConfidence
+      ? "The AI is not sure. Retake the photo in good light, or ask an agronomist to confirm before spraying anything."
+      : (treatment.treatment || "Ask a qualified agronomist.");
+
+    $("treatmentNote").textContent = lowConfidence
+      ? ""
+      : (treatment.note || (treatment.organic ? "Organic option: " + treatment.organic : ""));
 
     $("topGuesses").hidden = !lowConfidence;
 
@@ -226,7 +243,7 @@
         const li = document.createElement("li");
 
         li.textContent =
-          `${guess.label.replaceAll("_", " ")} — ` +
+          `${niceName(guess.label)} — ` +
           `${(guess.confidence * 100).toFixed(1)}%`;
 
         $("topGuessesList").appendChild(li);
@@ -240,6 +257,29 @@
     const cam = PDD.cam(model, feat, classIndex);
 
     drawHeatmap(cam);
+  }
+
+  // [merge] sharper copy of the same centred square for the on-screen preview
+  function displaySquare(image) {
+    const side = Math.min(image.naturalWidth, image.naturalHeight);
+    const c = document.createElement("canvas");
+    c.width = 640;
+    c.height = 640;
+    const ctx = c.getContext("2d");
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(image, (image.naturalWidth - side) / 2, (image.naturalHeight - side) / 2, side, side, 0, 0, 640, 640);
+    return c.toDataURL("image/jpeg", 0.9);
+  }
+
+  // [merge] 96px JPEG thumbnail stored with the scan (shown in map pins)
+  function makeThumb() {
+    const c = document.createElement("canvas");
+    c.width = 96;
+    c.height = 96;
+    const ctx = c.getContext("2d");
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(lastSquareCanvas, 0, 0, 96, 96);
+    return c.toDataURL("image/jpeg", 0.75);
   }
 
   async function processPhoto(file) {
@@ -266,11 +306,13 @@
 
       const rgba = makeSquareFrame(image);
 
-      photoPreview.src =
-        URL.createObjectURL(file);
+      // [merge] show the same centred square the AI analysed, so the heatmap lines up on any photo shape
+      photoPreview.src = displaySquare(image);
 
       photoPreview.hidden = false;
       previewPlaceholder.hidden = true;
+
+      try { await photoPreview.decode(); } catch (e) { /* draw anyway */ }
 
       const stats = PDD.leafStats(rgba);
 
@@ -329,7 +371,7 @@
           confidence: item.confidence
         })),
 
-        thumb: photoPreview.src
+        thumb: makeThumb()
       };
 
       saveButton.disabled = false;
@@ -376,9 +418,11 @@
       scan.lng = position.lng;
     }
 
+    let saved = scan;
+
     try {
       if (typeof window.saveScan === "function") {
-        await window.saveScan(scan);
+        saved = (await window.saveScan(scan)) || scan; // [merge] storage.js (Person 3)
       } else {
         const key = "pdd_scans_person2_fallback";
 
@@ -394,12 +438,12 @@
         );
       }
 
-      currentScan = scan;
+      currentScan = saved;
 
       setStatus(
-        position
-          ? "Scan saved with GPS."
-          : "Scan saved without GPS.",
+        typeof saved.lat === "number"
+          ? "Scan saved with GPS. See it on the Field map."
+          : "Scan saved without GPS. Turn on location to put it on the map.",
         "success"
       );
 
