@@ -19,7 +19,8 @@ Photograph a leaf, get a diagnosis from an AI that runs on the phone, pin the sc
 | `training/` | Person 1 | Python: prepare data, train, export, check JS = Python |
 
 ## Model
-CNN (4 conv layers, ~99k parameters) trained on PlantVillage photos of 15 tomato, potato and bell pepper conditions.
-91.0% accuracy on 937 photos never used in training; answers above the 80% confidence threshold were right 98.2% of the time.
+CNN (4 conv layers, ~99k parameters) trained by Person 1 on PlantVillage photos of 15 tomato, potato and bell pepper conditions.
+Check on 520 separate PlantVillage photos (13 conditions, not in the original training set): 88.1% accuracy.
+Answers above the 80% confidence threshold (77% of photos) were right 96.2% of the time; below it the app shows its top 3 and says to ask an expert.
 
 After changing any app file, bump `VERSION` in `sw.js` so phones load the new version.

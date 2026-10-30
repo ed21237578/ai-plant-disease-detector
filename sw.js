@@ -3,7 +3,7 @@
  * - Map tiles: cached as you view them, so fields you have looked at still show offline.
  * After changing any app file, bump VERSION so phones pick up the new files.
  */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const APP_CACHE = 'pdd-app-' + VERSION;
 const TILE_CACHE = 'pdd-tiles-v1';
 const MAX_TILES = 600;
